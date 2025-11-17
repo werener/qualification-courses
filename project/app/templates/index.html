@@ -1,0 +1,33 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>qualification courses</title>
+</head>
+<body>
+    <link rel="stylesheet" href="{% static 'app/css/index.css' %}">
+    <div classname="'inputs">
+        <input 
+            type="text", 
+            placeholder="ФИО через пробел", 
+            name="fullname_input",
+            class="input">
+        <br>
+        <input 
+            type="text", 
+            placeholder="Должность сотрудника", 
+            name="job", 
+            class="input">
+        <br>
+        <input 
+            type="text", 
+            placeholder="Почта сотрудника(опционально)",
+            name="email", 
+            class="input">
+    </div>
+</body>
+</html>
