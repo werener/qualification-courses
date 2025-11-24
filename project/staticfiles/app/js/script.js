@@ -4,7 +4,9 @@ class EmployeeForm {
 		this.successMessage = document.getElementById("successMessage");
 		this.submitBtn = document.getElementById("submitBtn");
 		this.clearBtn = document.getElementById("clearBtn");
-
+		setTimeout(() => {
+			this.successMessage.style.display = "none";
+		}, 5000);
 		this.initializeEventListeners();
 		this.setMinDateForEndDate();
 	}
@@ -15,13 +17,14 @@ class EmployeeForm {
 
 		document
 			.getElementById("lastName")
-			.addEventListener("blur", () => this.validateLastName());
+			.addEventListener("blur", () => this.validateLastName());			
 		document
 			.getElementById("firstName")
 			.addEventListener("blur", () => this.validateFirstName());
 		document
 			.getElementById("email")
 			.addEventListener("blur", () => this.validateEmail());
+		
 		document
 			.getElementById("course")
 			.addEventListener("change", () => this.validateCourse());
@@ -67,18 +70,6 @@ class EmployeeForm {
 		return true;
 	}
 
-	leName() {
-		const middleName = document.getElementById("middleName").value.trim();
-		const errorElement = document.getElementById("middleNameError");
-
-		if (!middleName) {
-			this.showError(errorElement, "Поле отчества обязательно для заполнения");
-			return false;
-		}
-
-		this.hideError(errorElement);
-		return true;
-	}
 
 	validateEmail() {
 		const email = document.getElementById("email").value.trim();
@@ -196,8 +187,8 @@ class EmployeeForm {
 			const formData = new FormData(this.form);
 			formData.append("fullName", fullName);
 
-			console.log("Полное ФИО:", fullName);
-			console.log("Данные для отправки:", Object.fromEntries(formData));
+			// console.log("Полное ФИО:", fullName);
+			// console.log("Данные для отправки:", Object.fromEntries(formData));
 
 			this.form.submit();
 		} catch (error) {
