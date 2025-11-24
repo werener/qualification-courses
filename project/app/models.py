@@ -34,9 +34,9 @@ class Enrollment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата записи")
     
     class Meta:
-        verbose_name = "Запись о прохождении курса"
-        verbose_name_plural = "Записи о прохождении курсов"
+        verbose_name = "Запись на курс"
+        verbose_name_plural = "Записи на курс"
         ordering = ['-created_at']
     
     def __str__(self):
-        return f"{self.employee} - {self.course}"
+        return f"{self.employee} ({self.course}): {self.start_date} - {self.end_date}"

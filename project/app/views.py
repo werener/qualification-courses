@@ -1,5 +1,5 @@
 # app/views.py
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *
 
 AVAILIABLE_COURSES = [
@@ -9,10 +9,20 @@ AVAILIABLE_COURSES = [
     'Финансовый менеджмент',
     'Стратегическое планирование',
 ]
-
 def index(request):
-    return render(request, 'index.html', {'courses': AVAILIABLE_COURSES, 'database_error_message': "",})
-
+    # Get messages from session if they exist
+    success = request.session.pop('success', False)
+    database_error_message = request.session.pop('database_error_message', "")
+    show_message = request.session.pop('show_message', False)
+    
+    context = {
+        'courses': AVAILIABLE_COURSES, 
+        'database_error_message': database_error_message,
+        'success': success,
+        'show_message': show_message,
+    }
+    
+    return render(request, 'index.html', context)
 def submit_data(request):
     success = False
     database_error_message = ""
@@ -50,11 +60,12 @@ def submit_data(request):
             )
             success = True
         else:
-            database_error_message = 'Данный сотрудник уже записан на этот курс'
-            
-    return render(request, 'index.html', {'success': success, 
-                                          'database_error_message': database_error_message,
-                                          'courses': AVAILIABLE_COURSES, })
+            database_error_message = 'Cотрудник уже записан на этот курс'
+        
+        request.session['success'] = success
+        request.session['database_error_message'] = database_error_message
+        
+    return redirect('index')
 
 def get_rep_page(request):
     return render(request, 'report.html', {'courses': AVAILIABLE_COURSES})

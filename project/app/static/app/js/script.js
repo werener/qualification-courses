@@ -2,13 +2,18 @@ class EmployeeForm {
 	constructor() {
 		this.form = document.getElementById("employeeForm");
 		this.successMessage = document.getElementById("successMessage");
+		this.failureMessage = document.getElementById("failureMessage");
 		this.submitBtn = document.getElementById("submitBtn");
 		this.clearBtn = document.getElementById("clearBtn");
 		setTimeout(() => {
 			this.successMessage.style.display = "none";
-		}, 5000);
+		}, 4000);
+		setTimeout(() => {
+			this.failureMessage.style.display = "none";
+		}, 4000);
 		this.initializeEventListeners();
 		this.setMinDateForEndDate();
+		
 	}
 
 	initializeEventListeners() {
@@ -191,6 +196,7 @@ class EmployeeForm {
 			// console.log("Данные для отправки:", Object.fromEntries(formData));
 
 			this.form.submit();
+			
 		} catch (error) {
 			console.error("Ошибка при отправке данных:", error);
 			alert(
@@ -199,6 +205,7 @@ class EmployeeForm {
 		} finally {
 			this.submitBtn.disabled = false;
 			this.submitBtn.textContent = "Отправить данные";
+			
 		}
 	}
 
