@@ -1,33 +1,97 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>qualification courses</title>
+    <title>Система контроля курсов повышения квалификации</title>
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
 </head>
 <body>
-    <link rel="stylesheet" href="{% static 'app/css/index.css' %}">
-    <div classname="'inputs">
-        <input 
-            type="text", 
-            placeholder="ФИО через пробел", 
-            name="fullname_input",
-            class="input">
-        <br>
-        <input 
-            type="text", 
-            placeholder="Должность сотрудника", 
-            name="job", 
-            class="input">
-        <br>
-        <input 
-            type="text", 
-            placeholder="Почта сотрудника(опционально)",
-            name="email", 
-            class="input">
+    <div class="container">
+        <header class="header">
+            <h1>Система контроля курсов повышения квалификации</h1>
+            <p>АО "КОНСИСТ" - Учет дополнительного профессионального образования</p>
+        </header>
+
+        {% if success %}
+        <div class="success-message" id="successMessage">
+            Данные успешно отправлены!
+        </div>
+        {% endif %}
+
+        <div class="form-container">
+            <form id="employeeForm" method="POST" action="{% url 'submit_data' %}">
+                {% csrf_token %}
+                
+        <div class="form-group">
+            <label class="required">ФИО сотрудника</label>
+            <div class="fio-row">
+                <div class="fio-field">
+                    <input type="text" id="lastName" name="lastName" placeholder="Фамилия" required>
+                    <div class="error-message" id="lastNameError">Поле фамилии обязательно</div>
+                </div>
+                <div class="fio-field">
+                    <input type="text" id="firstName" name="firstName" placeholder="Имя" required>
+                    <div class="error-message" id="firstNameError">Поле имени обязательно</div>
+                </div>
+                <div class="fio-field">
+                    <input type="text" id="middleName" name="middleName" placeholder="Отчество">
+                    <div class="error-message" id="middleNameError">Поле отчества обязательно</div>
+                </div>
+            </div>
+        </div>
+
+                <div class="form-group">
+                    <label for="position">Должность сотрудника</label>
+                    <input type="text" id="position" name="position">
+                    <div class="error-message" id="positionError">Поле должности обязательно для заполнения</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email сотрудника</label>
+                    <input type="email" id="email" name="email">
+                    <div class="error-message" id="emailError">Введите корректный email адрес</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="course" class="required">Курс повышения квалификации</label>
+                    <select id="course" name="course" required>
+                        <option value="">Выберите курс</option>
+                        <option value="Управление проектами">Управление проектами</option>
+                        <option value="Цифровая трансформация">Цифровая трансформация</option>
+                        <option value="Лидерство и командообразование">Лидерство и командообразование</option>
+                        <option value="Финансовый менеджмент">Финансовый менеджмент</option>
+                        <option value="Стратегическое планирование">Стратегическое планирование</option>
+                    </select>
+                    <div class="error-message" id="courseError">Выберите курс из списка</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="startDate" class="required">Дата начала курса</label>
+                    <input type="date" id="startDate" name="startDate" required>
+                    <div class="error-message" id="startDateError">Укажите дату начала курса</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="endDate" class="required">Дата окончания курса</label>
+                    <input type="date" id="endDate" name="endDate" required>
+                    <div class="error-message" id="endDateError">Укажите дату окончания курса</div>
+                </div>
+
+
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        Отправить данные
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="clearBtn">
+                        Очистить форму
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
+
+    <script src="{% static 'app/js/script.js' %}"></script>
 </body>
 </html>
