@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор графиков и визуализаций</title>
+    <link rel="stylesheet" href="{% static 'app/css/graph.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Генератор графиков и визуализаций</h1>
+            <p class="description">Создавайте различные типы графиков и экспортируйте их в PDF</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="chartType">Тип графика:</label>
+                <select id="chartType">
+                    <option value="line">Линейный график</option>
+                    <option value="bar">Столбчатая диаграмма</option>
+                    <option value="pie">Круговая диаграмма</option>
+                    <option value="scatter">Точечная диаграмма</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="title">Заголовок:</label>
+                <input type="text" id="title" placeholder="Введите заголовок графика">
+            </div>
+
+            <div class="control-group">
+                <label for="dataInput">Данные (JSON):</label>
+                <textarea id="dataInput" placeholder='Пример: {"labels": ["Янв", "Фев", "Мар"], "datasets": [{"label": "Продажи", "data": [12, 19, 3]}]}'></textarea>
+            </div>
+
+            <button id="generateBtn" class="btn primary">Сгенерировать график</button>
+            <button id="exportBtn" class="btn secondary">Экспорт в PDF</button>
+        </div>
+
+        <div class="charts-container">
+            <div class="chart-wrapper">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'app/js/graph.js' %}"></script>
+</body>
+</html>
