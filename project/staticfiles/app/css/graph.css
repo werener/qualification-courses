@@ -126,6 +126,33 @@ textarea {
     box-shadow: var(--shadow);
 }
 
+/* Стили для PDF экспорта */
+.pdf-export {
+    background: white;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.pdf-title {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.pdf-chart {
+    width: 100%;
+    height: auto;
+}
+
+.pdf-footer {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+    font-size: 12px;
+}
+
 @media (max-width: 768px) {
     .controls {
         flex-direction: column;

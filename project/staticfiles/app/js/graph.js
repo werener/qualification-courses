@@ -132,22 +132,141 @@ function generateChart() {
     });
 }
 
-// Экспорт в PDF
-function exportToPDF() {
-    const element = document.querySelector('.charts-container');
-    const opt = {
-        margin: 10,
-        filename: 'graph_export.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-    
-    // Добавление заголовка в экспорт
-    const title = titleInput.value || 'График';
-    const tempElement = document.createElement('div');
-    tempElement.innerHTML = `<h2 style="text-align: center; margin-bottom: 20px;">${title}</h2>`;
-    tempElement.appendChild(element.cloneNode(true));
-    
-    html2pdf().set(opt).from(tempElement).save();
+// Экспорт в PDF - ИСПРАВЛЕННАЯ ВЕРСИЯ
+async function exportToPDF() {
+    if (!myChart) {
+        alert('Сначала создайте график!');
+        return;
+    }
+
+    try {
+        // Показываем уведомление о начале процесса
+        exportBtn.textContent = 'Генерация PDF...';
+        exportBtn.disabled = true;
+
+        // Создаем временный canvas для высококачественного рендеринга
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+        
+        // Устанавливаем размеры для PDF
+        tempCanvas.width = chartCanvas.width * 2; // Увеличиваем разрешение для PDF
+        tempCanvas.height = chartCanvas.height * 2;
+        
+        // Копируем стили и данные графика
+        tempCtx.fillStyle = 'white';
+        tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+        tempCtx.drawImage(chartCanvas, 0, 0, tempCanvas.width, tempCanvas.height);
+
+        // Создаем HTML для экспорта
+        const exportHTML = `
+            <div class="pdf-export">
+                <h1 class="pdf-title">${titleInput.value || 'График'}</h1>
+                <div class="pdf-content">
+                    <img src="${tempCanvas.toDataURL('image/png')}" class="pdf-chart" alt="График">
+                    <div class="pdf-footer">
+                        <p>Сгенерировано: ${new Date().toLocaleString('ru-RU')}</p>
+                        <p>Тип графика: ${chartTypeSelect.options[chartTypeSelect.selectedIndex].text}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Создаем временный элемент для рендеринга
+        const tempElement = document.createElement('div');
+        tempElement.innerHTML = exportHTML;
+        document.body.appendChild(tempElement);
+
+        // Настройки для PDF
+        const opt = {
+            margin: [10, 10, 10, 10],
+            filename: `graph_${new Date().getTime()}.pdf`,
+            image: { 
+                type: 'jpeg', 
+                quality: 0.98 
+            },
+            html2canvas: { 
+                scale: 2,
+                useCORS: true,
+                logging: false
+            },
+            jsPDF: { 
+                unit: 'mm', 
+                format: 'a4', 
+                orientation: 'portrait' 
+            }
+        };
+
+        // Генерируем и скачиваем PDF
+        await html2pdf().set(opt).from(tempElement).save();
+        
+        // Убираем временный элемент
+        document.body.removeChild(tempElement);
+        
+    } catch (error) {
+        console.error('Ошибка при генерации PDF:', error);
+        alert('Произошла ошибка при генерации PDF. Проверьте консоль для подробностей.');
+    } finally {
+        // Восстанавливаем кнопку
+        exportBtn.textContent = 'Экспорт в PDF';
+        exportBtn.disabled = false;
+    }
 }
+
+// Альтернативный метод экспорта (простой, но надежный)
+function exportToPDFSimple() {
+    if (!myChart) {
+        alert('Сначала создайте график!');
+        return;
+    }
+
+    // Создаем новое окно с содержимым для печати
+    const printWindow = window.open('', '_blank');
+    const title = titleInput.value || 'График';
+    const chartImage = chartCanvas.toDataURL('image/png');
+    
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>${title}</title>
+            <style>
+                body { 
+                    font-family: Arial, sans-serif; 
+                    text-align: center; 
+                    padding: 20px;
+                }
+                h1 { color: #4a6fa5; }
+                img { max-width: 100%; height: auto; }
+                .footer { 
+                    margin-top: 20px; 
+                    color: #666; 
+                    font-size: 12px;
+                }
+                @media print {
+                    body { padding: 0; }
+                }
+            </style>
+        </head>
+        <body>
+            <h1>${title}</h1>
+            <img src="${chartImage}" alt="График">
+            <div class="footer">
+                <p>Сгенерировано: ${new Date().toLocaleString('ru-RU')}</p>
+                <p>Тип графика: ${chartTypeSelect.options[chartTypeSelect.selectedIndex].text}</p>
+            </div>
+            <script>
+                window.onload = function() {
+                    window.print();
+                    setTimeout(function() {
+                        window.close();
+                    }, 500);
+                };
+            </script>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+}
+
+// Заменяем основную функцию экспорта на более надежную
+exportBtn.addEventListener('click', exportToPDFSimple);

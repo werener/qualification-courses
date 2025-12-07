@@ -105,12 +105,12 @@ class EmployeeForm {
 	validateStartDate() {
 		const startDate = document.getElementById("startDate").value;
 		const errorElement = document.getElementById("startDateError");
-
+		
 		if (!startDate) {
 			this.showError(errorElement, "Укажите дату начала курса");
 			return false;
 		}
-
+		
 		this.hideError(errorElement);
 		return true;
 	}

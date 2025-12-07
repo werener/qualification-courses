@@ -10,8 +10,6 @@
 <body>
     <div class="container">
         <h1>📊 Система отчетности по курсам</h1>
-        <p class="subtitle">Выберите тип отчета и параметры для анализа посещаемости</p>
-
         <form id="reportForm" action="{% url 'visualization' %}" method="POST">
             {% csrf_token %}
             <!-- Выбор типа отчета -->
@@ -19,43 +17,50 @@
                 <h2>1. Тип отчета</h2>
                 <div class="radio-group">
                     <div class="radio-item">
-                        <input type="radio" id="report1" name="report_type" value="general_dynamics" checked>
+                        <input type="radio" id="report1" name="report_type" value="completion_dynamics" checked>
                         <label for="report1">
-                            <strong>Общая динамика и загрузка</strong>
-                            <span class="description">Динамика посещаемости и нагрузка по времени</span>
+                            <strong>Динамика прохождений курсов</strong>
+                            <span class="description">Круговая диаграмма количества посещений каждого курса</span>
                         </label>
+                        
                     </div>
                     
                     <div class="radio-item">
-                        <input type="radio" id="report2" name="report_type" value="course_effectiveness">
+                        <input type="radio" id="report2" name="report_type" value="course_popularity_month">
                         <label for="report2">
-                            <strong>Эффективность курсов</strong>
-                            <span class="description">Рейтинг курсов по популярности и завершению</span>
+                            <strong>Популярность курсов (по месяцам)</strong>
+                            <span class="description">График количества посещений занятий в указанный временной промежуток </span>
                         </label>
                     </div>
                     
                     <div class="radio-item">
-                        <input type="radio" id="report3" name="report_type" value="audience_analysis">
+                        <input type="radio" id="report3" name="report_type" value="course_popularity_week">
                         <label for="report3">
-                            <strong>Анализ аудитории</strong>
-                            <span class="description">Распределение слушателей по отделам и должностям</span>
+                            <strong>Популярность курсов (по неделям)</strong>
+                            <span class="description">График количества посещений занятий в указанный временной промежуток</span>
                         </label>
                     </div>
                     
                     <div class="radio-item">
-                        <input type="radio" id="report4" name="report_type" value="geographic_time">
+                        <input type="radio" id="report4" name="report_type" value="courses_by_position">
                         <label for="report4">
-                            <strong>Географический и временной анализ</strong>
-                            <span class="description">Посещаемость по филиалам и времени проведения</span>
+                            <strong>Популярность по должностям</strong>
+                            <span class="description">Количество посещенных занятий по должностям</span>
                         </label>
                     </div>
                     
-                    <div class="radio-item">
-                        <input type="radio" id="report5" name="report_type" value="planning_forecast">
-                        <label for="report5">
-                            <strong>Прогнозирование и выполнение плана</strong>
-                            <span class="description">Сравнение плановых и фактических показателей</span>
-                        </label>
+                </div>
+
+            <!-- Тип диаграммы -->
+                <br></br>
+                <div class="chart-type">
+                    <div class="param-group">
+                        <label for="chart_type">Тип графика:</label>
+                        <select id="chart_type" name="chart_type">
+                            <option value="line">Линейный</option>
+                            <option value="bar">Столбчатый</option>
+                            <option value="pie">Круговой</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -65,8 +70,8 @@
                 <h2>2. Выбор курсов</h2>
                 <div class="courses-grid">
                     {% for course in courses %}
-                    <div class="course-checkbox" id="'checkboxes">
-                        <input type="checkbox" id="course {{ course }}" name="selected_courses" checked>
+                    <div class="course-checkbox" id="'checkboxes" name="courses">
+                        <input type="checkbox" id="course {{ course }}" name="{{ course }}" checked>
                         <label for="course {{ course }}">{{ course }}</label>
                     </div>
                     {% endfor %}
@@ -98,31 +103,7 @@
                 </div>
             </div>
 
-            <!-- Дополнительные параметры -->
-            <div class="form-section">
-                <h2>4. Дополнительные параметры</h2>
-                <div class="additional-params">
-                    <div class="param-group">
-                        <label for="group_by">Группировка:</label>
-                        <select id="group_by" name="group_by">
-                            <option value="day">По дням</option>
-                            <option value="week">По неделям</option>
-                            <option value="month">По месяцам</option>
-                            <option value="quarter">По кварталам</option>
-                        </select>
-                    </div>
-                    
-                    <div class="param-group">
-                        <label for="chart_type">Тип графика:</label>
-                        <select id="chart_type" name="chart_type">
-                            <option value="line">Линейный</option>
-                            <option value="bar">Столбчатый</option>
-                            <option value="pie">Круговой</option>
-                            <option value="area">Областной</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
+
 
             <!-- Кнопки действий -->
             <div class="form-actions main-actions">

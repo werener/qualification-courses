@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Выбор всех курсов
     selectAllBtn.addEventListener('click', function() {
         
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const checkboxes = document.querySelectorAll('input[name="selected_courses"]');
         
         checkboxes.forEach(checkbox => {
             checkbox.checked = true;
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Снятие выделения со всех курсов
     deselectAllBtn.addEventListener('click', function() {
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const checkboxes = document.querySelectorAll('input[name="selected_courses"]');
         checkboxes.forEach(checkbox => {
             checkbox.checked = false;
         });
@@ -84,9 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function validateForm() {
         const startDate = new Date(document.getElementById('start_date').value);
         const endDate = new Date(document.getElementById('end_date').value);
-        // const selectedCourses = document.querySelectorAll('input[name="selected_courses"]:checked');
-
-        const selectedCourses = document.querySelectorAll('input[type="checkbox"]:checked');
+        const selectedCourses = document.querySelectorAll('input[name="selected_courses"]:checked');
         
         // Проверка дат
         if (startDate > endDate) {
@@ -95,20 +93,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Проверка выбора курсов
-        if (selectedCourses.length === 0) {
-            alert('Выберите хотя бы один курс для анализа');
-            return false;
-        }
+        // if (selectedCourses.length === 0) {
+        //     alert('Выберите хотя бы один курс для анализа');
+        //     return false;
+        // }
         
         return true;
     }
     
     function getReportTypeText(type) {
         const types = {
-            'completion_dynamics': 'Динамика прохождений курсов',
-            'course_popularity_month': 'Популярность курсов (по месяцам)',
-            'course_popularity_week': 'Популярность курсов (по неделям)',
-            'courses_by_position': 'Популярность по должностям',
+            'general_dynamics': 'Общая динамика и загрузка',
+            'course_effectiveness': 'Эффективность курсов',
+            'audience_analysis': 'Анализ аудитории',
+            'geographic_time': 'Географический и временной анализ',
+            'planning_forecast': 'Прогнозирование и выполнение плана'
         };
         return types[type] || type;
     }
@@ -130,26 +129,38 @@ document.addEventListener('DOMContentLoaded', function() {
         let chartTypes = [];
         
         switch(reportType) {
-            case 'completion_dynamics':
+            case 'general_dynamics':
+                chartTypes = [
+                    {value: 'line', text: 'Линейный график'},
+                    {value: 'bar', text: 'Столбчатая диаграмма'},
+                    {value: 'area', text: 'Областная диаграмма'}
+                ];
+                break;
+            case 'course_effectiveness':
                 chartTypes = [
                     {value: 'bar', text: 'Столбчатая диаграмма'},
                     {value: 'pie', text: 'Круговая диаграмма'},
-                ];
-                break;
-            case 'course_popularity_month':
-                chartTypes = [
                     {value: 'line', text: 'Линейный график'}
                 ];
                 break;
-            case 'course_popularity_week':
+            case 'audience_analysis':
                 chartTypes = [
-                    {value: 'line', text: 'Линейный график'}
+                    {value: 'pie', text: 'Круговая диаграмма'},
+                    {value: 'bar', text: 'Столбчатая диаграмма'},
+                    {value: 'treemap', text: 'Древовидная диаграмма'}
                 ];
                 break;
-            case 'courses_by_position':
+            case 'geographic_time':
                 chartTypes = [
                     {value: 'bar', text: 'Столбчатая диаграмма'},
-                    {value: 'pie', text: 'Круговая диаграмма'},
+                    {value: 'heatmap', text: 'Тепловая карта'},
+                    {value: 'line', text: 'Линейный график'}
+                ];
+                break;
+            case 'planning_forecast':
+                chartTypes = [
+                    {value: 'line', text: 'Линейный график'},
+                    {value: 'bar', text: 'Столбчатая диаграмма'}
                 ];
                 break;
             default:
