@@ -47,7 +47,19 @@ h1 {
 }
 
 .controls {
-    display: flex;
+    /* visibility: none; */
+    display: none;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 30px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+}
+.controls_a {
+    /* visibility: none; */
+    /* display: none; */
     flex-wrap: wrap;
     gap: 15px;
     margin-bottom: 30px;
@@ -57,6 +69,10 @@ h1 {
     box-shadow: var(--shadow);
 }
 
+.button-generate {
+    margin-top: 20px;
+    margin-left: 45%;
+}
 .control-group {
     display: flex;
     flex-direction: column;

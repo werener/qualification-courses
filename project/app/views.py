@@ -1,9 +1,12 @@
 # app/views.py
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import *
 from datetime import datetime
 from collections import defaultdict
+from random import randint
+import json
 
 AVAILIABLE_COURSES = [
     "Управление проектами",
@@ -12,7 +15,8 @@ AVAILIABLE_COURSES = [
     "Финансовый менеджмент",
     "Стратегическое планирование",
 ]
-COURSES_TO_INDEXES = dict(map(lambda x: x[::-1], enumerate(AVAILIABLE_COURSES)))
+COURSES_TO_INDEXES = dict(map(lambda x: x[::-1],
+                              enumerate(AVAILIABLE_COURSES)))
 
 COMPANY_ESTABLISHMENT_DATE = 1992
 
@@ -86,7 +90,10 @@ def get_report_page(request):
     return render(
         request,
         "report.html",
-        {"courses": AVAILIABLE_COURSES, "indexation": COURSES_TO_INDEXES},
+        {
+            "courses": AVAILIABLE_COURSES,
+            "indexation": COURSES_TO_INDEXES
+        },
     )
 
 
@@ -104,23 +111,28 @@ def visualization(request):
     data = dict(request.POST)
 
     #   courses
-    chosen_courses = [course for course in AVAILIABLE_COURSES if course in data]
+    chosen_courses = [
+        course for course in AVAILIABLE_COURSES if course in data
+    ]
 
     #   dates
     start_date = datetime.strptime(data["start_date"][0], "%Y-%m-%d").date()
     end_date = datetime.strptime(data["end_date"][0], "%Y-%m-%d").date()
-    enrollments = Enrollment.objects.filter(
-        start_date__gte=start_date, end_date__lte=end_date, course__in=chosen_courses
-    )
-
+    enrollments = Enrollment.objects.filter(start_date__gte=start_date,
+                                            end_date__lte=end_date,
+                                            course__in=chosen_courses)
     #   types
     chart_type = data["chart_type"][0]
     report_type = data["report_type"][0]
-    label = REPORT_TYPES[report_type]
+    label = REPORT_TYPES[report_type] #+ f"({start_date} - {end_date})"
 
     #   LOGIC
     match report_type:
         case "completion_dynamics":
+            #   create colors for each course   
+                #   [0; 2**24) - hex color range
+            colors = [f'#{hex(randint(0, 2**24 - 1))[2:]}' for _ in chosen_courses]
+
             #   count each courses' attendance
             counts = defaultdict(int)
             for enrollment in enrollments:
@@ -129,13 +141,11 @@ def visualization(request):
             #   create data for graph generation
             generation_data = {
                 "labels": chosen_courses,
-                "datasets": [
-                    {
-                        "label": label,
-                        "data": [counts[course] for course in chosen_courses],
-                        "backgroundColor": "#6b8cbc",
-                    }
-                ],
+                "datasets": [{
+                    "label": label,
+                    "data": [counts[course] for course in chosen_courses],
+                    "backgroundColor": colors,
+                }],
             }
     #     case "course_popularity_month":
     #         ...
@@ -149,10 +159,10 @@ def visualization(request):
         "end_date": end_date,
         "chosen_courses": chosen_courses,
         "chart_type": chart_type,
-        "label": label,
+        "chart_label": label,
         "data_input": generation_data,
     }
-    
+
     print(chart_data)
     print("-" * 50)
     # return render(
@@ -161,9 +171,11 @@ def visualization(request):
     #     {"courses": AVAILIABLE_COURSES, "indexation": COURSES_TO_INDEXES},
     # )
     print(generation_data)
-    return render(
-        request, "graph.html", {"courses": AVAILIABLE_COURSES, "chart_data": chart_data}
-    )
+    return render(request, "graph.html", {
+        "courses": AVAILIABLE_COURSES,
+        "chart_data": chart_data,
+        "gen_data": json.dumps(generation_data)
+    })
 
 
 """

@@ -19,31 +19,30 @@
         <div class="controls">
             <div class="control-group">
                 <label for="chartType">Тип графика:</label>
-                <select id="chartType">
-                    <option value="line">Линейный график</option>
-                    <option value="bar">Столбчатая диаграмма</option>
-                    <option value="pie">Круговая диаграмма</option>
-                    <option value="scatter">Точечная диаграмма</option>
+                <select id="chartType" class="">
+                    <option value="line" {% if chart_data.chart_type == 'line' %}selected{% endif %}>Линейный график</option>
+                    <option value="bar" {% if chart_data.chart_type == 'bar' %}selected{% endif %}>Столбчатая диаграмма</option>
+                    <option value="pie" {% if chart_data.chart_type == 'pie' %}selected{% endif %}>Круговая диаграмма</option>
                 </select>
             </div>
 
             <div class="control-group">
                 <label for="title">Заголовок:</label>
-                <input type="text" id="title" placeholder="Введите заголовок графика">
+                <input type="text" id="title" placeholder="" value="{{ chart_data.chart_label }}">
             </div>
 
             <div class="control-group">
                 <label for="dataInput">Данные (JSON):</label>
-                <textarea id="dataInput" placeholder='Пример: {"labels": ["Янв", "Фев", "Мар"], "datasets": [{"label": "Продажи", "data": [12, 19, 3]}]}'></textarea>
+                <textarea id="dataInput" placeholder="" >{{ gen_data }}</textarea>
             </div>
 
-            <button id="generateBtn" class="btn primary">Сгенерировать график</button>
-            <button id="exportBtn" class="btn secondary">Экспорт в PDF</button>
+            
         </div>
 
         <div class="charts-container">
             <div class="chart-wrapper">
                 <canvas id="myChart"></canvas>
+                <button id="exportBtn" class="btn secondary button-generate">Экспорт в PDF</button>
             </div>
         </div>
     </div>
