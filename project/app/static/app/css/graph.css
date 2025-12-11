@@ -59,7 +59,7 @@ h1 {
 }
 .controls_a {
     /* visibility: none; */
-    /* display: none; */
+    display: none;
     flex-wrap: wrap;
     gap: 15px;
     margin-bottom: 30px;

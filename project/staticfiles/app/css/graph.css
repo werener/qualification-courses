@@ -7,9 +7,6 @@
     --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.invisible {
-    visibility: hidden;
-}
 * {
     margin: 0;
     padding: 0;
@@ -50,16 +47,37 @@ h1 {
 }
 
 .controls {
-    visibility: hidden;
-    margin:0px;
-    size:0px;
-
+    /* visibility: none; */
+    display: none;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 30px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+}
+.controls_a {
+    /* visibility: none; */
+    /* display: none; */
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 30px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
 }
 
+.button-generate {
+    margin-top: 20px;
+    margin-left: 45%;
+}
 .control-group {
-    visibility: hidden;
-    margin:0px;
-    size:0px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 200px;
 }
 
 label {
@@ -151,7 +169,15 @@ textarea {
     font-size: 12px;
 }
 
-@media (max-width: 768px) {    
+@media (max-width: 768px) {
+    .controls {
+        flex-direction: column;
+    }
+    
+    .control-group {
+        min-width: 100%;
+    }
+    
     .btn {
         align-self: stretch;
     }
